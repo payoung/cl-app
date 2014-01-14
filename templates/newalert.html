@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body%}
+    <h2>new alert</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form action="{{ url_for('add_alert') }}" method=post class=new-alert>
+        <dl>
+            <dt>Alert Name: <dd><input type=text name=name>
+            <dt>Search Page Link: <dd><input type=text name=link>
+            <dt>Alert Interval: <dd><input type=number name=interval>
+            <dt>Alert Notification Settings: <dd><input type="checkbox" name="notifications" value="email">Email
+                                             <dd><input type="checkbox" name="notifications" value="text">Text Message
+            <dd><input type=submit value="Save Settings">
+        </dl>                            
+    </form>
+{% endblock %}

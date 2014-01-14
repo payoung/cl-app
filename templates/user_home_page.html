@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% block body%}
     <h2>{{ message1 }}</h2>
-    <li><h2>{{ message2 }}</h2>
+    {% for alert in alerts %}
+        <li><h2>{{ alert.name }}</h2>{{ alert.link }}
+    {% else %}
+        <li><em>Unbelievable.  No alerts here so far</em>
+    {% endfor %}
 {% endblock %}

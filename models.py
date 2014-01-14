@@ -12,19 +12,21 @@ class User(UserMixin, Base):
     email = Column(String, unique=True)
     password = Column(String)
 
-    searches = relationship("Search", backref="user", lazy='dynamic')
+    searches = relationship("Alert", backref="user", lazy='dynamic')
 
 
-class Search(Base):
-    __tablename__ = 'searches'
+class Alert(Base):
+    __tablename__ = 'alerts'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    string = Column(String)
-    status = Column(Integer, default = 0)
+    link = Column(String)
+    alert_interval = Column(Integer)
+    alert_method = Column(Integer)
+    alert_status = Column(Integer, default = 0)
     last_update = Column(Date)
 
-    results = relationship("Result", backref="search")
+    results = relationship("Result", backref="alert")
     user_id = Column(Integer, ForeignKey('users.id'))
 
 
@@ -35,7 +37,7 @@ class Result(Base):
     title = Column(String)
     link = Column(String)
 
-    search_id = Column(Integer, ForeignKey('searches.id'))
+    alert_id = Column(Integer, ForeignKey('alerts.id'))
 
     
 

@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, flash, redirect, url_for
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, session, current_user
 from database import db_session
 from models import *
+import datetime
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -56,8 +57,30 @@ def signup():
 @login_required
 def user_home_page():
     message1 = "Welcome back, " + current_user.name
-    message2 = "Here is your home page"
-    return render_template("user_home_page.html", message1=message1, message2=message2)
+    alerts = db_session.query(Alert).filter_by(user=current_user).all()
+    return render_template("user_home_page.html", message1=message1, alerts=alerts)
+
+@app.route("/newalert", methods=["GET", "POST"])
+@login_required
+def newalert():
+    error = None
+    return render_template("newalert.html", error=error)
+
+@app.route('/add', methods=['GET', 'POST'])
+@login_required
+def add_alert():
+    print request.form['name']
+    print request.form['link']
+    print request.form['interval']
+    print request.form.getlist('notifications')
+    #alert = Alert(name=request.form['name'], link=request.form['link'],
+                #alert_interval=request.form['interval'], notifications=request.form.getlist('notifications'),
+                #alert_status=1, last_update=datetime.date.today(), user=current_user)
+    #db_session.add(alert)
+    #db.session.commit()
+    flash('New alert was created')
+    return redirect(url_for('user_home_page'))
+
 
 @app.route("/logout")
 @login_required
