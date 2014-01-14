@@ -1,19 +1,10 @@
-"""
-Models for CL App
-"""
-
-import sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table
-from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy.orm import relationship, backref
+from flask.ext.login import UserMixin
+from database import Base
 
-#engine = sqlalchemy.create_engine('sqlite:///cl_app.db', echo=False)
-engine = sqlalchemy.create_engine('sqlite:///:memory:', echo=False)
 
-Base = declarative_base()
-Session = sessionmaker(bind=engine)
-
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -21,7 +12,7 @@ class User(Base):
     email = Column(String, unique=True)
     password = Column(String)
 
-    searchs = relationship("Search", backref="user", lazy='dynamic')
+    searches = relationship("Search", backref="user", lazy='dynamic')
 
 
 class Search(Base):
@@ -46,7 +37,5 @@ class Result(Base):
 
     search_id = Column(Integer, ForeignKey('searches.id'))
 
-
-Base.metadata.create_all(engine)
     
 
