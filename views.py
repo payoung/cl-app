@@ -69,17 +69,28 @@ def newalert():
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_alert():
-    print request.form['name']
-    print request.form['link']
-    print request.form['interval']
-    print request.form.getlist('notifications')
-    #alert = Alert(name=request.form['name'], link=request.form['link'],
-                #alert_interval=request.form['interval'], notifications=request.form.getlist('notifications'),
-                #alert_status=1, last_update=datetime.date.today(), user=current_user)
-    #db_session.add(alert)
-    #db.session.commit()
+    email = False; textmessage = False
+    notifications_list = request.form.getlist('notifications')
+    if 'email' in notifications_list:
+        email = True
+    if 'textmessage' in notifications_list:
+        textmessage = True
+    alert = Alert(name=request.form['name'], link=request.form['link'],
+                alert_interval=request.form['interval'], email_alert=email,
+                text_alert=textmessage, alert_status=1, 
+                last_update=datetime.date.today(), user=current_user)
+    db_session.add(alert)
+    db_session.commit()
     flash('New alert was created')
     return redirect(url_for('user_home_page'))
+
+@app.route('/profile/<name>')
+@login_required
+def profile():
+    '''
+    Need to fill this part out, can use mega tutorial as example
+    '''
+    return render_template("profile.html")
 
 
 @app.route("/logout")

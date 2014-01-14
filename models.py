@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table, Boolean
 from sqlalchemy.orm import relationship, backref
 from flask.ext.login import UserMixin
 from database import Base
@@ -22,7 +22,8 @@ class Alert(Base):
     name = Column(String)
     link = Column(String)
     alert_interval = Column(Integer)
-    alert_method = Column(Integer)
+    email_alert = Column(Boolean)
+    text_alert = Column(Boolean)
     alert_status = Column(Integer, default = 0)
     last_update = Column(Date)
 
