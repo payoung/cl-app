@@ -1,43 +1,33 @@
 import urllib2
-#from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
-def to_text(address, text_file):
-	
-	html = urllib2.urlopen(address).read() 
+def url_to_soup(address):
+    html = urllib2.urlopen(address).read()
+    soup = BeautifulSoup(html)
+    return soup
 
+def pull_data(soup):
+    post_ids = []
+    post_dates = []
+    post_descs = []
+    post_price = []
+    post_links = []
 
-	#soup = BeautifulSoup(html)
+    for p in soup.findAll("p"):
+        post_ids.append(p.get('data-pid'))
+        post_dates.append(p.contents[5].span.get_text())
+        post_descs.append(p.contents[5].a.get_text())
+        price = p.contents[1].find(class_="price")
+        if price != None:
+            post_price.append(price.get_text())
+        else:
+            post_price.append(price)
+        post_links.append(p.contents[1].get('href'))
 
-	#s_doc = soup.prettify()
+    return post_ids, post_dates, post_descs, post_price, post_links
 
-	target = open(text_file, 'w')
-	target.truncate()
-	target.write(html)
-	target.close()
+address = 'http://sfbay.craigslist.org/search/sga?catAbb=sga&query=surfboard+hybrid&zoomToPosting=&minAsk=&maxAsk='
 
-address = 'http://sfbay.craigslist.org/search/jjj?catAbb=jjj&query=python&zoomToPosting=&addFour=part-time'
-txt = 'CL-PartTime-Python-Search.txt'
-
-to_text(address, txt)
-
-"""
-address = []
-address.append('http://www.swellinfo.com/surf-forecast/ocean-beach-california-nw')
-address.append('http://www.swellinfo.com/surf-forecast/ocean-beach-california')
-address.append('http://www.swellinfo.com/surf-forecast/half-moon-bay-california')
-address.append('http://www.swellinfo.com/surf-forecast/pescadero-california')
-address.append('http://www.swellinfo.com/surf-forecast/davenport-california')
-address.append('http://www.swellinfo.com/surf-forecast/santa-cruz-california')
-
-txt = []
-txt.append('Ocean Beach North.txt')
-txt.append('Ocean Beach South.txt')
-txt.append('Half Moon Bay.txt')
-txt.append('Pescadero.txt')
-txt.append('Davenport.txt')
-txt.append('Santa Cruz.txt')
-
-for i in range(len(address)):
-	to_text(address[i], txt[i])
-"""
+soup = url_to_soup(address)
+post_ids, post_dates, post_descs, post_price, post_links = pull_data(soup)
 
