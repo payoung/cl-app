@@ -11,6 +11,7 @@ class User(UserMixin, Base):
     name = Column(String)
     email = Column(String, unique=True)
     password = Column(String)
+    phone = Column(String)
 
     searches = relationship("Alert", backref="user", lazy='dynamic')
 

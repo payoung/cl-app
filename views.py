@@ -4,6 +4,7 @@ from flask.ext.login import LoginManager, login_user, login_required, logout_use
 from database import db_session
 from models import *
 import datetime
+from forms import EditProfileForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -44,7 +45,7 @@ def signup():
         else:
             session['logged_in'] = True
             user = User(name=request.form['username'], password=request.form['password'], 
-                    email=request.form['email'])
+                    email=request.form['email'], phone=request.form['phone'])
             db_session.add(user)
             db_session.commit()
             login_user(user)
@@ -84,13 +85,23 @@ def add_alert():
     flash('New alert was created')
     return redirect(url_for('user_home_page'))
 
-@app.route('/profile/<name>')
+@app.route('/editprofile', methods=['GET', 'POST'])
 @login_required
-def profile():
-    '''
-    Need to fill this part out, can use mega tutorial as example
-    '''
-    return render_template("profile.html")
+def editprofile():
+    form = EditProfileForm(current_user.name)
+    if form.validate_on_submit():
+        current_user.name = form.request['name']
+        current_user.email = form.request['email']
+        current_user.phone = form.request['phone']
+        db_session.add(current_user)
+        db_session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('editprofile'))
+    elif request.method != "POST":
+        form.name.data = current_user.name
+        form.email.data = current_user.email
+        form.phone.data = current_user.phone
+    return render_template('editprofile.html', form=form)
 
 
 @app.route("/logout")
