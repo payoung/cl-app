@@ -9,10 +9,10 @@ class TestCase(unittest.TestCase):
         init_db()
         
     def test_input_data(self):
-        u1 = User(name="Paul", email="paul.andy.young@gmail.com", 
-                    password="whatever")
-        u2 = User(name="Joe", email="judojoe84@gmail.com", 
-                    password="hellyeah")
+        u1 = User(name="Paul", email="fake@email.com", 
+                    password="password")
+        u2 = User(name="Joe", email="judo@gmail.com", 
+                    password="password")
     
         s1 = Alert(name="guitars", string="guitars -steel", status=1, 
                     last_update=datetime.date(2013, 9, 25), user=u1)
