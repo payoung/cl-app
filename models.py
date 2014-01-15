@@ -25,7 +25,7 @@ class Alert(Base):
     alert_interval = Column(Integer)
     email_alert = Column(Boolean)
     text_alert = Column(Boolean)
-    alert_status = Column(Integer, default = 0)
+    alert_status = Column(Boolean)
     last_update = Column(Date)
 
     results = relationship("Result", backref="alert")

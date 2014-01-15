@@ -103,6 +103,24 @@ def editprofile():
         form.phone.data = current_user.phone
     return render_template('editprofile.html', form=form)
 
+@app.route('/alertstatus/<alertname>', methods=['GET', 'POST'])
+@login_required
+def alertstatus(alertname):
+    alert = db_session.query(Alert).filter_by(user=current_user, name=alertname).first()
+    if alert.email_alert:
+        email="Yes"
+    else:
+        email="No"
+    if alert.text_alert:
+        text="Yes"
+    else:
+        text="No"
+    if alert.alert_status:
+        active="Active"
+    else:
+        active="Inactive"
+    return render_template('alertstatus.html', alert=alert, email=email, 
+                            text=text, active=active)
 
 @app.route("/logout")
 @login_required

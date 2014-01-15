@@ -11,6 +11,7 @@
         <a href="{{ url_for('login') }}">log in</a>
         {% endif %}
     {% else %}
+        <a href="{{ url_for('user_home_page') }}">home</a>
         <a href="{{ url_for('newalert') }}">new alert</a>
         <a href="{{url_for('editprofile') }}">edit profile</a>
         <a href="{{ url_for('logout') }}"> log out</a>

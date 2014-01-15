@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body%}
+	<h1>{{ alert.name }}</h1>
+	<li><h2>cl link: </h2> 
+		{{ alert.link }}
+	<li><h2>alert interval: </h2> 
+		{{ alert.alert_interval }}
+	<li><h2>email alert: </h2> 
+		{{ email }}
+   	<li><h2>text alert: </h2> 
+   		{{ text }}
+   	<li><h2>status: </h2> 
+   		{{ active }}
+   	<li><em>Last updated: {{ alert.last_update }}</em>
+{% endblock %}
