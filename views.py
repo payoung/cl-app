@@ -90,9 +90,9 @@ def add_alert():
 def editprofile():
     form = EditProfileForm(current_user.name)
     if form.validate_on_submit():
-        current_user.name = form.request['name']
-        current_user.email = form.request['email']
-        current_user.phone = form.request['phone']
+        current_user.name = form.name.data
+        current_user.email = form.email.data
+        current_user.phone = form.phone.data
         db_session.add(current_user)
         db_session.commit()
         flash('Your changes have been saved.')
