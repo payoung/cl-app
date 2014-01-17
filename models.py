@@ -28,16 +28,19 @@ class Alert(Base):
     alert_status = Column(Boolean)
     last_update = Column(Date)
 
-    results = relationship("Result", backref="alert")
+    results = relationship("Scrape", backref="alert")
     user_id = Column(Integer, ForeignKey('users.id'))
 
 
-class Result(Base):
-    __tablename__ = 'results'
+class Scrape(Base):
+    __tablename__ = 'scrapes'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String)
-    link = Column(String)
+    post_ids = Column(String)
+    dates = Column(String)
+    descs = Column(String)
+    prices = Column(String)
+    links = Column(String)
 
     alert_id = Column(Integer, ForeignKey('alerts.id'))
 
