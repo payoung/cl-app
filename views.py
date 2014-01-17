@@ -4,7 +4,8 @@ from flask.ext.login import LoginManager, login_user, login_required, logout_use
 from database import db_session
 from models import *
 import datetime
-from forms import EditProfileForm
+from forms import EditProfileForm, EditAlertForm
+
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -61,11 +62,13 @@ def user_home_page():
     alerts = db_session.query(Alert).filter_by(user=current_user).all()
     return render_template("user_home_page.html", message1=message1, alerts=alerts)
 
+
 @app.route("/newalert", methods=["GET", "POST"])
 @login_required
 def newalert():
     error = None
     return render_template("newalert.html", error=error)
+
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -85,6 +88,7 @@ def add_alert():
     flash('New alert was created')
     return redirect(url_for('user_home_page'))
 
+
 @app.route('/editprofile', methods=['GET', 'POST'])
 @login_required
 def editprofile():
@@ -102,6 +106,7 @@ def editprofile():
         form.email.data = current_user.email
         form.phone.data = current_user.phone
     return render_template('editprofile.html', form=form)
+
 
 @app.route('/alertstatus/<alertname>', methods=['GET', 'POST'])
 @login_required
@@ -122,12 +127,38 @@ def alertstatus(alertname):
     return render_template('alertstatus.html', alert=alert, email=email, 
                             text=text, active=active)
 
+
+@app.route('/editalert/<alertname>', methods=['GET', 'POST'])
+@login_required
+def editalert(alertname):
+    form = EditAlertForm()
+    alert = db_session.query(Alert).filter_by(user=current_user, name=alertname).first()
+    if form.validate_on_submit():
+        alert.name = form.name.data
+        alert.link = form.link.data
+        alert.alert_interval = form.interval.data
+        alert.email_alert = form.email.data
+        alert.text_alert = form.text.data
+        db_session.add(alert)
+        db_session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('editalert', alertname=alert.name))
+    elif request.method != "POST":
+        form.name.data = alert.name
+        form.link.data = alert.link
+        form.interval.data = alert.alert_interval
+        form.email.data = alert.email_alert
+        form.text.data = alert.text_alert
+    return render_template('editalert.html', form=form)
+
+
 @app.route("/logout")
 @login_required
 def logout():
     session.pop('logged_in', None)
     logout_user()
     return redirect(url_for('login'))
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

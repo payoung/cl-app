@@ -4,6 +4,7 @@ from wtforms.validators import Required, Length
 from models import User
     
 class EditProfileForm(Form):
+
     name = TextField('name', validators = [Required()])
     email = TextField('email')
     phone = TextField('phone')
@@ -22,5 +23,14 @@ class EditProfileForm(Form):
             self.name.errors.append('This user name is already in use. Please choose another one.')
             return False
         return True
+
+
+class EditAlertForm(Form):
+
+    name = TextField('name', validators = [Required()])
+    link = TextField('link')
+    interval = TextField('interval')
+    email = BooleanField('email')
+    text = BooleanField('text')    
         
         

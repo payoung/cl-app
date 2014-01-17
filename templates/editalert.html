@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>Edit Your Alert</h1>
+<form action="" method="post" name="edit">
+    {{form.hidden_tag()}}
+    <table>
+        <tr>
+            <td>Alert Name:</td>
+            <td>
+                {{form.name(size = 24)}}
+                {% for error in form.errors.name %}
+                <br><span style="color: red;">[{{error}}]</span>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td>Link:</td>
+            <td>{{form.link(size=24)}}</td>
+        </tr>
+        <tr>
+            <td>Alert Interval:</td>
+            <td>{{form.interval(size=24)}}</td>
+        </tr>
+        <tr>
+            <td>Email Alert:</td>
+            <td>{{form.email()}}</td>
+        </tr>
+        <tr>
+            <td>Text Alert:</td>
+            <td>{{form.text()}}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Save Changes"></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
