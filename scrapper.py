@@ -4,6 +4,8 @@ from database import db_session
 from models import *
 from json import dumps
 from apscheduler.scheduler import Scheduler
+import datetime
+
 
 sched = Scheduler()
 
@@ -47,7 +49,8 @@ def main():
                         links=dumps(links), alert=alert)
         db_session.add(scrape)
         db_session.commit()
-
+    
+    print "Scheduled process was run:", datetime.datetime.now()
 
 sched.start()
 

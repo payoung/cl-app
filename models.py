@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table, Boolean
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table, Boolean, DateTime
 from sqlalchemy.orm import relationship, backref
 from flask.ext.login import UserMixin
 from database import Base
@@ -36,6 +36,7 @@ class Scrape(Base):
     __tablename__ = 'scrapes'
 
     id = Column(Integer, primary_key=True)
+    dt = Column(DateTime)
     post_ids = Column(String)
     dates = Column(String)
     descs = Column(String)
@@ -44,5 +45,14 @@ class Scrape(Base):
 
     alert_id = Column(Integer, ForeignKey('alerts.id'))
 
+'''
+class AlertSummary(Base):
+    __tablename__ = 'summary'
+
+    id = Column(Integer, primary_key=True)
+    
+
+    alert_id = Column(Integer, ForeignKey('alerts.id'))
+'''
     
 
