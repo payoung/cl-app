@@ -57,11 +57,3 @@ sched.start()
 
 while True:
     pass
-
-
-#address = 'http://sfbay.craigslist.org/search/ggg?zoomToPosting=&catAbb=ggg&query=python&addThree=&excats='
-#address = 'http://sfbay.craigslist.org/search/sga?catAbb=sga&query=surfboard+hybrid&zoomToPosting=&minAsk=&maxAsk='
-
-#soup = url_to_soup(address)
-#post_ids, post_dates, post_descs, post_prices, post_links = pull_data(soup)
-
