@@ -46,7 +46,8 @@ def main():
         ids, dates, descs, prices, links = pull_data(soup)
         scrape = Scrape(post_ids=dumps(ids), dates=dumps(dates), 
                         descs=dumps(descs), prices=dumps(prices), 
-                        links=dumps(links), alert=alert)
+                        links=dumps(links), dt=datetime.datetime.now(), 
+                        alert=alert)
         db_session.add(scrape)
         db_session.commit()
     
