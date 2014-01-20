@@ -38,7 +38,7 @@ def pull_data(soup):
     return ids, dates, descs, prices, links
 
 
-@sched.interval_schedule(minutes=2)
+@sched.interval_schedule(hours=2)
 def main():
     alerts = db_session.query(Alert).all()
 
