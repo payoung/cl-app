@@ -44,10 +44,15 @@ def main():
     for alert in alerts:
         soup = url_to_soup(alert.link)
         ids, dates, descs, prices, links = pull_data(soup)
+        last_update = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).first()
+        new_post_cnt = 0
+        for i in ids:
+            if i not in last_update.post_ids:
+                new_post_cnt +=1
         scrape = Scrape(post_ids=dumps(ids), dates=dumps(dates), 
                         descs=dumps(descs), prices=dumps(prices), 
-                        links=dumps(links), dt=datetime.datetime.now(), 
-                        alert=alert)
+                        links=dumps(links), dt=datetime.datetime.now(),
+                        new_posts=new_post_cnt, alert=alert)
         db_session.add(scrape)
         db_session.commit()
     

@@ -42,6 +42,7 @@ class Scrape(Base):
     descs = Column(String)
     prices = Column(String)
     links = Column(String)
+    new_posts = Column(Integer)
 
     alert_id = Column(Integer, ForeignKey('alerts.id'))
 
