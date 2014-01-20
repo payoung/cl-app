@@ -5,6 +5,7 @@ from models import *
 from json import dumps
 from apscheduler.scheduler import Scheduler
 import datetime
+from sqlalchemy import desc
 
 
 sched = Scheduler()
@@ -57,7 +58,7 @@ def main():
         db_session.add(scrape)
         db_session.commit()
     
-    print "Scheduled process was run:", datetime.datetime.now()
+    print "Scheduled job was run:", datetime.datetime.now()
 
 sched.start()
 
