@@ -46,9 +46,10 @@ def main():
         ids, dates, descs, prices, links = pull_data(soup)
         last_update = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).first()
         new_post_cnt = 0
-        for i in ids:
-            if i not in last_update.post_ids:
-                new_post_cnt +=1
+        if last_update != None:
+            for i in ids:
+                if i not in last_update.post_ids:
+                    new_post_cnt +=1
         scrape = Scrape(post_ids=dumps(ids), dates=dumps(dates), 
                         descs=dumps(descs), prices=dumps(prices), 
                         links=dumps(links), dt=datetime.datetime.now(),
