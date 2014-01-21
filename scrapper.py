@@ -38,7 +38,7 @@ def pull_data(soup):
     return ids, dates, descs, prices, links
 
 
-@sched.interval_schedule(hours=2)
+@sched.interval_schedule(minutes=15)
 def main():
     alerts = db_session.query(Alert).all()
 
@@ -51,13 +51,25 @@ def main():
             for i in ids:
                 if i not in last_update.post_ids:
                     new_post_cnt +=1
+        now = datetime.datetime.now()
         scrape = Scrape(post_ids=dumps(ids), dates=dumps(dates), 
                         descs=dumps(descs), prices=dumps(prices), 
-                        links=dumps(links), dt=datetime.datetime.now(),
+                        links=dumps(links), dt=now,
                         new_posts=new_post_cnt, alert=alert)
         db_session.add(scrape)
         db_session.commit()
-    
+        #update the last_24 field in the alerts table by getting the last 12 scrapes (assuming
+        #that the scrapes are done every 2 hours) and adding up any new posts
+        past_12 = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).limit(12)
+        delta24 = datetime.timedelta(hours=24)
+        last_24 = 0
+        for past in past_12:
+            if now - past.dt < delta24:
+                last_24 += past.new_posts
+        alert.last_24 = last_24
+        alert.last_update = datetime.datetime.today()
+        db_session.add(alert)
+        db_session.commit()
     print "Scheduled job was run:", datetime.datetime.now()
 
 sched.start()

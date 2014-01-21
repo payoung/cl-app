@@ -26,6 +26,7 @@ class Alert(Base):
     email_alert = Column(Boolean)
     text_alert = Column(Boolean)
     alert_status = Column(Boolean)
+    last_24 = Column(Integer)
     last_update = Column(Date)
 
     results = relationship("Scrape", backref="alert")
@@ -45,15 +46,4 @@ class Scrape(Base):
     new_posts = Column(Integer)
 
     alert_id = Column(Integer, ForeignKey('alerts.id'))
-
-'''
-class AlertSummary(Base):
-    __tablename__ = 'summary'
-
-    id = Column(Integer, primary_key=True)
-    
-
-    alert_id = Column(Integer, ForeignKey('alerts.id'))
-'''
-    
 

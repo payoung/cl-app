@@ -81,7 +81,7 @@ def add_alert():
         textmessage = True
     alert = Alert(name=request.form['name'], link=request.form['link'],
                 alert_interval=request.form['interval'], email_alert=email,
-                text_alert=textmessage, alert_status=1, 
+                text_alert=textmessage, alert_status=1, last_24=0, 
                 last_update=datetime.date.today(), user=current_user)
     db_session.add(alert)
     db_session.commit()
