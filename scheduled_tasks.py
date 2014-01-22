@@ -6,10 +6,13 @@ from json import dumps
 from apscheduler.scheduler import Scheduler
 import datetime
 from sqlalchemy import desc
-
+from twilio.rest import TwilioRestClient
 
 sched = Scheduler()
 
+'''
+Scrapping Tasks
+'''
 
 def url_to_soup(address):
     html = urllib2.urlopen(address).read()
@@ -71,6 +74,52 @@ def main():
         db_session.add(alert)
         db_session.commit()
     print "Scheduled job was run:", datetime.datetime.now()
+
+'''
+Messaging Tasks
+'''
+
+#base url + the apiKey param
+url = 'http://api.npr.org/query?searchTerm='
+url += '49ers'
+url += '&output=JSON&apiKey=MDExOTIzMDA4MDEzNzU4MzIzNjFkMDk2Mw001'
+
+#open our url, load the JSON
+response = urlopen(url)
+json_obj = load(response)
+
+#Find the dates of the stories in the returned JSON
+dates = []
+for story in json_obj['list']['story']:
+    d_string = story['storyDate']['$text'][5:16]
+    d_fmt = datetime.datetime.strptime(d_string, "%d %b %Y")
+    dates.append(d_fmt)
+
+
+# function for sending text messages through the Twilio API
+def send_alert():
+
+    # Your Account Sid and Auth Token from twilio.com/user/account
+    account_sid = "AC3c996f9bb21304d599fd435137d1d85a"
+    auth_token  = "bdf56ca67b4db628df031b42e961137c"
+    client = TwilioRestClient(account_sid, auth_token)
+ 
+    message = client.sms.messages.create(body="There is a new article about the 49ers",
+        to="+14155779330",
+        from_="+16502739385")
+    print message.sid
+
+
+# assume that we are running the cron job to look for new articles once a day
+now = datetime.datetime.now()
+yesterday = now - datetime.timedelta(days=1)
+
+if max(dates) > yesterday:
+    send_alert()
+
+'''
+Start Scheduler and run infinite loop
+'''
 
 sched.start()
 
