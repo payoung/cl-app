@@ -27,7 +27,7 @@ class Alert(Base):
     text_alert = Column(Boolean)
     alert_status = Column(Boolean)
     last_24 = Column(Integer)
-    last_update = Column(Date)
+    last_update = Column(DateTime)
 
     results = relationship("Scrape", backref="alert")
     user_id = Column(Integer, ForeignKey('users.id'))

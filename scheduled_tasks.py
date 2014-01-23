@@ -8,6 +8,7 @@ import time
 import datetime
 from sqlalchemy import desc
 from twilio.rest import TwilioRestClient
+from credentials import twilio_account_sid, twilio_auth_token, twilio_phone
 
 sched = Scheduler()
 
@@ -42,10 +43,7 @@ def pull_data(soup):
     return ids, dates, descs, prices, links
 
 
-#@sched.interval_schedule(minutes=15)
-@sched.cron_schedule(hour='0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22')
-def main():
-    alerts = db_session.query(Alert).all()
+def scrape(alerts):
 
     for alert in alerts:
         soup = url_to_soup(alert.link)
@@ -69,10 +67,9 @@ def main():
         delta24 = datetime.timedelta(hours=24)
         last_24 = 0
         for past in past_12:
-            if now - past.dt < delta24:
+            if now - past.dt =< delta24:
                 last_24 += past.new_posts
         alert.last_24 = last_24
-        alert.last_update = datetime.datetime.today()
         db_session.add(alert)
         db_session.commit()
     print "Scheduled job was run:", datetime.datetime.now()
@@ -81,31 +78,36 @@ def main():
 Messaging Tasks
 '''
 
-
 # function for sending text messages through the Twilio API
-def send_alert():
+def send_text(alerts):
 
     # Your Account Sid and Auth Token from twilio.com/user/account
-    account_sid = "AC3c996f9bb21304d599fd435137d1d85a"
-    auth_token  = "bdf56ca67b4db628df031b42e961137c"
-    client = TwilioRestClient(account_sid, auth_token)
- 
-    message = client.sms.messages.create(body="There is a new article about the 49ers",
-        to="+14155779330",
-        from_="+16502739385")
-    print message.sid
+    client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
+    now = datetime.datetime.now()
 
-
-# assume that we are running the cron job to look for new articles once a day
-now = datetime.datetime.now()
-yesterday = now - datetime.timedelta(days=1)
-
-if max(dates) > yesterday:
-    send_alert()
+    for alert in alerts:
+        if alert_status:
+            alert_delta = datetime.timedelta(hours=alert.alert_interval)
+            if now - alert.last_update >= alert_delta:
+                user. alert.user
+                body = alert.name + ": There have been " + str(alert.last24) +
+                    " in the last 24 hours."
+                message = client.sms.messages.create(body=body,
+                    to=user.phone,
+                    from_=twilio_phone)
 
 '''
 Start Scheduler and run infinite loop
 '''
+
+#@sched.interval_schedule(minutes=15)
+@sched.cron_schedule(hour='0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22')
+def run_tasks():
+    alerts = db_session.query(Alert).all()
+    scrape(alerts)
+    send_text(alerts)
+    #send_email(alerts)
+
 
 sched.start()
 
