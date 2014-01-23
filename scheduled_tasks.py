@@ -67,7 +67,7 @@ def scrape(alerts):
         delta24 = datetime.timedelta(hours=24)
         last_24 = 0
         for past in past_12:
-            if now - past.dt =< delta24:
+            if now - past.dt <= delta24:
                 last_24 += past.new_posts
         alert.last_24 = last_24
         db_session.add(alert)
@@ -90,8 +90,7 @@ def send_text(alerts):
             alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
                 user = alert.user
-                body = alert.name + ": There have been " + str(alert.last_24) +
-                    " in the last 24 hours."
+                body = alert.name + ": There have been " + str(alert.last_24) + " in the last 24 hours."
                 message = client.sms.messages.create(body=body,
                     to=user.phone,
                     from_=twilio_phone)
@@ -100,8 +99,8 @@ def send_text(alerts):
 Start Scheduler and run infinite loop
 '''
 
-#@sched.interval_schedule(minutes=15)
-@sched.cron_schedule(hour='0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22')
+@sched.interval_schedule(hours=1)
+#@sched.cron_schedule(hour='0,2,4,6,8,10,12,14,16,18,20,22')
 def run_tasks():
     alerts = db_session.query(Alert).all()
     scrape(alerts)
