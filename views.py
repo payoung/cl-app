@@ -80,8 +80,8 @@ def add_alert():
     if 'textmessage' in notifications_list:
         textmessage = True
     alert = Alert(name=request.form['name'], link=request.form['link'],
-                alert_interval=request.form['interval'], email_alert=email,
-                text_alert=textmessage, alert_status=1, last_24=0, 
+                interval=request.form['interval'], email=email,
+                text=textmessage, status=1, last_24=0, 
                 last_update=datetime.date.today(), user=current_user)
     db_session.add(alert)
     db_session.commit()
@@ -136,9 +136,9 @@ def editalert(alertname):
     if form.validate_on_submit():
         alert.name = form.name.data
         alert.link = form.link.data
-        alert.alert_interval = form.interval.data
-        alert.email_alert = form.email.data
-        alert.text_alert = form.text.data
+        alert.interval = form.interval.data
+        alert.alert = form.email.data
+        alert.alert = form.text.data
         db_session.add(alert)
         db_session.commit()
         flash('Your changes have been saved.')
@@ -146,9 +146,9 @@ def editalert(alertname):
     elif request.method != "POST":
         form.name.data = alert.name
         form.link.data = alert.link
-        form.interval.data = alert.alert_interval
-        form.email.data = alert.email_alert
-        form.text.data = alert.text_alert
+        form.interval.data = alert.interval
+        form.email.data = alert.email
+        form.text.data = alert.text
     return render_template('editalert.html', form=form)
 
 

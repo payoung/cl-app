@@ -86,11 +86,11 @@ def send_text(alerts):
     now = datetime.datetime.now()
 
     for alert in alerts:
-        if alert_status:
-            alert_delta = datetime.timedelta(hours=alert.alert_interval)
+        if alert.status and alert.text:
+            alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
-                user. alert.user
-                body = alert.name + ": There have been " + str(alert.last24) +
+                user = alert.user
+                body = alert.name + ": There have been " + str(alert.last_24) +
                     " in the last 24 hours."
                 message = client.sms.messages.create(body=body,
                     to=user.phone,
