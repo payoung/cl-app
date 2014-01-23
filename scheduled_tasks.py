@@ -4,6 +4,7 @@ from database import db_session
 from models import *
 from json import dumps
 from apscheduler.scheduler import Scheduler
+import time
 import datetime
 from sqlalchemy import desc
 from twilio.rest import TwilioRestClient
@@ -41,7 +42,8 @@ def pull_data(soup):
     return ids, dates, descs, prices, links
 
 
-@sched.interval_schedule(minutes=15)
+#@sched.interval_schedule(minutes=15)
+@sched.cron_schedule(hour='0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22')
 def main():
     alerts = db_session.query(Alert).all()
 
@@ -79,22 +81,6 @@ def main():
 Messaging Tasks
 '''
 
-#base url + the apiKey param
-url = 'http://api.npr.org/query?searchTerm='
-url += '49ers'
-url += '&output=JSON&apiKey=MDExOTIzMDA4MDEzNzU4MzIzNjFkMDk2Mw001'
-
-#open our url, load the JSON
-response = urlopen(url)
-json_obj = load(response)
-
-#Find the dates of the stories in the returned JSON
-dates = []
-for story in json_obj['list']['story']:
-    d_string = story['storyDate']['$text'][5:16]
-    d_fmt = datetime.datetime.strptime(d_string, "%d %b %Y")
-    dates.append(d_fmt)
-
 
 # function for sending text messages through the Twilio API
 def send_alert():
@@ -124,4 +110,5 @@ Start Scheduler and run infinite loop
 sched.start()
 
 while True:
+    time.sleep(1)
     pass
