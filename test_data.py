@@ -20,7 +20,7 @@ def add_test_data():
                     last_update=datetime.datetime.now(), user=user)
     db_session.add(alert2)
     db_session.commit()
-    alert3 = Alert(name='Cheap Motorcycles', link=link3, interval=12,
+    alert3 = Alert(name='Cheap Motorcycles', link=link3, interval=1,
                     email=True, text=True, status=True, last_24=0,
                     last_update=datetime.datetime.now(), user=user)
     db_session.add(alert3)
