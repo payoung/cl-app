@@ -137,8 +137,9 @@ def editalert(alertname):
         alert.name = form.name.data
         alert.link = form.link.data
         alert.interval = form.interval.data
-        alert.alert = form.email.data
-        alert.alert = form.text.data
+        alert.email = form.email.data
+        alert.text = form.text.data
+        alert.status = form.status.data
         db_session.add(alert)
         db_session.commit()
         flash('Your changes have been saved.')
@@ -149,6 +150,7 @@ def editalert(alertname):
         form.interval.data = alert.interval
         form.email.data = alert.email
         form.text.data = alert.text
+        form.status.data = alert.status
     return render_template('editalert.html', form=form)
 
 

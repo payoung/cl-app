@@ -31,6 +31,7 @@ class EditAlertForm(Form):
     link = TextField('link')
     interval = TextField('interval')
     email = BooleanField('email')
-    text = BooleanField('text')    
+    text = BooleanField('text')
+    status = BooleanField('status')
         
         
