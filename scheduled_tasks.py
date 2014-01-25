@@ -74,6 +74,7 @@ def scrape(alerts):
                 if now - past.dt <= delta24:
                     last_24 += past.new_posts
             alert.last_24 = last_24
+            alert.post_cnt += new_post_cnt
             db_session.add(alert)
             db_session.commit()
     print "Scheduled scrape was run:", datetime.datetime.now()
@@ -99,6 +100,10 @@ def send_text(alerts):
                 message = client.sms.messages.create(body=body,
                     to=user.phone,
                     from_=twilio_phone)
+                if not alert.email:
+                    alert.post_cnt = 0
+                    db_session.add(alert)
+                    db_session.commit()
                 print "Text message sent to:", user.name, datetime.datetime.now()
 
 
@@ -120,12 +125,15 @@ def send_email():
                 msg['From'] = sender
                 msg['To'] = user.email
                 s.sendmail(sender, [recipient], msg.as_string())
+                alert.post_cnt = 0
+                db_session.add(alert)
+                db_session.commit()
                 print "Email message sent to:", user.name, datetime.datetime.now()
     s.quit()
 
 
 '''
-Start Scheduler and run infinite loop
+Start Scheduler and run while loop
 '''
 
 @sched.interval_schedule(hours=1)

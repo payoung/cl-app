@@ -27,6 +27,7 @@ class Alert(Base):
     text = Column(Boolean)
     status = Column(Boolean)
     last_24 = Column(Integer)
+    post_cnt = Column(Integer)
     last_update = Column(DateTime)
 
     results = relationship("Scrape", backref="alert")
