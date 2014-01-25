@@ -96,7 +96,7 @@ def send_text(alerts):
             alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
                 user = alert.user
-                body = "CL Alerts: " + alert.name + " - There have been " + str(alert.last_24) + " new posts in the last 24 hours."
+                body = "CL Alerts: " + alert.name + " - There have been " + str(alert.post_cnt) + " new posts since the last alert."
                 message = client.sms.messages.create(body=body,
                     to=user.phone,
                     from_=twilio_phone)
@@ -114,12 +114,14 @@ def send_email(alerts):
     s = smtplib.SMTP(mailserver, mailport)
     s.login(sender, senderpw)
 
+    now = datetime.datetime.now()
+
     for alert in alerts:
         if alert.status and alert.email:
             alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
                 user = alert.user
-                body = "CL Alerts: " + alert.name + " - There have been " + str(alert.last_24) + " new posts in the last 24 hours."
+                body = "CL Alerts: " + alert.name + " - There have been " + str(alert.post_cnt) + " new posts since the last alert."
                 msg = MIMEText(body)
                 msg['Subject'] = 'CL Alert'
                 msg['From'] = sender
