@@ -126,7 +126,7 @@ def send_email(alerts):
                 msg['Subject'] = 'CL Alert'
                 msg['From'] = sender
                 msg['To'] = user.email
-                s.sendmail(sender, [recipient], msg.as_string())
+                s.sendmail(sender, [user.email], msg.as_string())
                 alert.post_cnt = 0
                 db_session.add(alert)
                 db_session.commit()
