@@ -107,7 +107,7 @@ def send_text(alerts):
                 print "Text message sent to:", user.name, datetime.datetime.now()
 
 
-def send_email():
+def send_email(alerts):
 
     # Email server setup and auth
     # Pulled from credentials.py
