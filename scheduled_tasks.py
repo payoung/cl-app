@@ -111,7 +111,7 @@ def send_email(alerts):
 
     # Email server setup and auth
     # Pulled from credentials.py
-    s = smtplib.SMTP(server, port)
+    s = smtplib.SMTP(mailserver, mailport)
     s.login(sender, senderpw)
 
     for alert in alerts:
