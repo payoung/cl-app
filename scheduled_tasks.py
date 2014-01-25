@@ -9,6 +9,9 @@ import datetime
 from sqlalchemy import desc
 from twilio.rest import TwilioRestClient
 from credentials import twilio_account_sid, twilio_auth_token, twilio_phone
+import smtplib
+from email.mime.text import MIMEText
+from credentials import mailserver, mailport, sender, senderpw
 
 sched = Scheduler()
 
@@ -83,6 +86,7 @@ Messaging Tasks
 def send_text(alerts):
 
     # Your Account Sid and Auth Token from twilio.com/user/account
+    # Pulled from credentials.py 
     client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
     now = datetime.datetime.now()
 
@@ -95,7 +99,29 @@ def send_text(alerts):
                 message = client.sms.messages.create(body=body,
                     to=user.phone,
                     from_=twilio_phone)
-                print "Message sent to:", user.name, datetime.datetime.now()
+                print "Text message sent to:", user.name, datetime.datetime.now()
+
+
+def send_email():
+
+    # Email server setup and auth
+    # Pulled from credentials.py
+    s = smtplib.SMTP(server, port)
+    s.login(sender, senderpw)
+
+    for alert in alerts:
+        if alert.status and alert.email:
+            alert_delta = datetime.timedelta(hours=alert.interval)
+            if now - alert.last_update >= alert_delta:
+                user = alert.user
+                body = "CL Alerts: " + alert.name + " - There have been " + str(alert.last_24) + " new posts in the last 24 hours."
+                msg = MIMEText(body)
+                msg['Subject'] = 'CL Alert'
+                msg['From'] = sender
+                msg['To'] = user.email
+                s.sendmail(sender, [recipient], msg.as_string())
+                print "Email message sent to:", user.name, datetime.datetime.now()
+    s.quit()
 
 
 '''
@@ -108,8 +134,8 @@ def run_tasks():
     alerts = db_session.query(Alert).all()
     scrape(alerts)
     send_text(alerts)
+    send_email(alerts)
     print "Scheduled tasks were run ", datetime.datetime.now()
-    #send_email(alerts)
 
 
 sched.start()
