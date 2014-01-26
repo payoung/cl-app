@@ -92,7 +92,7 @@ def send_text(alerts):
     now = datetime.datetime.now()
 
     for alert in alerts:
-        if alert.status and alert.text:
+        if alert.status and alert.text and alert.post_cnt > 0:
             alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
                 user = alert.user
@@ -102,6 +102,7 @@ def send_text(alerts):
                     from_=twilio_phone)
                 if not alert.email:
                     alert.post_cnt = 0
+                    alert.last_update = now
                     db_session.add(alert)
                     db_session.commit()
                 print "Text message sent to:", user.name, datetime.datetime.now()
@@ -117,7 +118,7 @@ def send_email(alerts):
     now = datetime.datetime.now()
 
     for alert in alerts:
-        if alert.status and alert.email:
+        if alert.status and alert.email and alert.post_cnt > 0:
             alert_delta = datetime.timedelta(hours=alert.interval)
             if now - alert.last_update >= alert_delta:
                 user = alert.user
@@ -128,6 +129,7 @@ def send_email(alerts):
                 msg['To'] = user.email
                 s.sendmail(sender, [user.email], msg.as_string())
                 alert.post_cnt = 0
+                alert.last_update = now
                 db_session.add(alert)
                 db_session.commit()
                 print "Email message sent to:", user.name, datetime.datetime.now()
