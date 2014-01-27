@@ -1,4 +1,4 @@
-from config import SECRET_KEY
+from credentials import SECRET_KEY
 from flask import Flask, request, render_template, flash, redirect, url_for
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, session, current_user
 from database import db_session
@@ -81,7 +81,7 @@ def add_alert():
         textmessage = True
     alert = Alert(name=request.form['name'], link=request.form['link'],
                 interval=request.form['interval'], email=email,
-                text=textmessage, status=1, last_24=0, 
+                text=textmessage, status=1, last_24=0, post_cnt=0,
                 last_update=datetime.date.today(), user=current_user)
     db_session.add(alert)
     db_session.commit()
