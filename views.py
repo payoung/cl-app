@@ -112,15 +112,15 @@ def editprofile():
 @login_required
 def alertstatus(alertname):
     alert = db_session.query(Alert).filter_by(user=current_user, name=alertname).first()
-    if alert.email_alert:
+    if alert.email:
         email="Yes"
     else:
         email="No"
-    if alert.text_alert:
+    if alert.text:
         text="Yes"
     else:
         text="No"
-    if alert.alert_status:
+    if alert.status:
         active="Active"
     else:
         active="Inactive"
