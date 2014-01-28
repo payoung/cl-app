@@ -5,6 +5,8 @@ from database import db_session
 from models import *
 import datetime
 from forms import EditProfileForm, EditAlertForm
+from sqlalchemy import desc
+from json import loads
 
 
 app = Flask(__name__)
@@ -124,8 +126,26 @@ def alertstatus(alertname):
         active="Active"
     else:
         active="Inactive"
+
+    '''
+    Load the last 10 posts and display on status page
+    '''
+    last_scrape = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).first()
+    descs = loads(last_scrape.descs)
+    sub_links = loads(last_scrape.links)
+    root_link = alert.link.split("org")[0] + "org"
+    links = []
+    for sub_link in sub_links:
+        links.append(root_link + sub_link)
+    if len(links) > 10:
+        links = links[:10]
+        descs = descs[:10]
+    pairs = []
+    for i in range(len(descs)):
+        pairs.append((descs[i], links[i]))
+
     return render_template('alertstatus.html', alert=alert, email=email, 
-                            text=text, active=active)
+                            text=text, active=active, pairs=pairs)
 
 
 @app.route('/editalert/<alertname>', methods=['GET', 'POST'])

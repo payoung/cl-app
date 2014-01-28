@@ -1,12 +1,21 @@
 {% extends "layout.html" %}
 {% block body%}
-	<h1>{{ alert.name }}</h1>
-	<li><h2>cl link: </h2> {{ alert.link }}
-	<li><h2>alert interval: </h2> {{ alert.interval }}
-	<li><h2>email alert: </h2> {{ email }}
-   	<li><h2>text alert: </h2> {{ text }}
-   	<li><h2>status: </h2> {{ active }}
+    <div>
+	<h2> <a href="{{ alert.link }}">{{ alert.name }}</a></h2>
+	<li><b>alert interval: </b> {{ alert.interval }}
+	<li><b>email alert: </b> {{ email }}
+   	<li><b>text alert: </b> {{ text }}
+   	<li><b>status: </b> {{ active }}
    	<li><em>Last updated: {{ alert.last_update }}</em>
-
     <li><a href="{{ url_for('editalert', alertname = alert.name) }}">edit alert</a>
+    </div>
+    <br>
+    <div>
+    <h2>Latest Posts</h2>
+    {% for pair in pairs %}
+    	<li><a href="{{ pair[1] }}">{{ pair[0] }}</a>
+    {% else %}
+        <li><em>Nothing to see here yet.  Please return once we have collected some data</em>
+    {% endfor %}
+    </div>
 {% endblock %}
