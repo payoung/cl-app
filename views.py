@@ -57,6 +57,11 @@ def signup():
     return render_template('signup.html', error=error, page=page)
 
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
+
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def user_home_page():

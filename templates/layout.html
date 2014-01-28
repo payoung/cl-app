@@ -2,9 +2,10 @@
 <title>CL Alerts</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <div class=page>
-    <h1>CL Alerts</h1>
+    <h1>CL Alerts - <i>beta version</i></h1>
     <div class=metanav>
     {% if not session.logged_in %}
+        <a href="{{ url_for('about') }}">about</a>
         {% if page == 'login' %}
         <a href="{{ url_for('signup') }}">sign up</a>
         {% else %}
@@ -14,6 +15,7 @@
         <a href="{{ url_for('user_home_page') }}">home</a>
         <a href="{{ url_for('newalert') }}">new alert</a>
         <a href="{{url_for('editprofile') }}">edit profile</a>
+        <a href="{{ url_for('about') }}">about</a>
         <a href="{{ url_for('logout') }}"> log out</a>
     {% endif %}
     </div>
