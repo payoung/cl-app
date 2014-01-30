@@ -1,3 +1,7 @@
 *.pyc
 credentials.py
 tmp/
+bin/
+lib/
+include/
+.Python
