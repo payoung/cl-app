@@ -67,10 +67,10 @@ def scrape(alerts):
             db_session.commit()
             #update the last_24 field in the alerts table by getting the last 12 scrapes (assuming
             #that the scrapes are done every 2 hours) and adding up any new posts
-            past_12 = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).limit(12)
+            past_24 = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).limit(24)
             delta24 = datetime.timedelta(hours=24)
             last_24 = 0
-            for past in past_12:
+            for past in past_24:
                 if now - past.dt <= delta24:
                     last_24 += past.new_posts
             alert.last_24 = last_24
