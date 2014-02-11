@@ -7,6 +7,7 @@ import datetime
 from forms import EditProfileForm, EditAlertForm
 from sqlalchemy import desc
 from json import loads
+from generate_plots import get_plot
 
 
 app = Flask(__name__)
@@ -132,9 +133,7 @@ def alertstatus(alertname):
     else:
         active="Inactive"
 
-    '''
-    Load the last 10 posts and display on status page
-    '''
+    # Load the last 10 posts and display on status page
     last_scrape = db_session.query(Scrape).filter_by(alert=alert).order_by(desc('dt')).first()
     if last_scrape:
         descs = loads(last_scrape.descs)
@@ -150,8 +149,11 @@ def alertstatus(alertname):
         for i in range(len(descs)):
             pairs.append((descs[i], links[i]))
 
+    # Get the filepath for the new posts plot
+    pname = "/" + get_plot(alert)
+
     return render_template('alertstatus.html', alert=alert, email=email, 
-                            text=text, active=active, pairs=pairs)
+                            text=text, active=active, pairs=pairs, pname=pname)
 
 
 @app.route('/editalert/<alertname>', methods=['GET', 'POST'])
