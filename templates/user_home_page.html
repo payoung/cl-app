@@ -3,7 +3,11 @@
     <h2>{{ message1 }}</h2>
     {% for alert in alerts %}
     	<li><a href="{{ url_for('alertstatus', alertname = alert.name) }}">{{ alert.name }}</a>
+        {% if alert.status == 1 %}
         <li><em>There have been {{ alert.last_24 }} new posts in the last 24 hours.</em>
+        {% else %}
+        <li><em>This alert is currently inactive, edit alert settings to resume activity.</em>
+        {% endif %}
     {% else %}
         <li><em>Unbelievable.  No alerts here so far</em>
     {% endfor %}
