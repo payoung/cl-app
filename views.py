@@ -138,6 +138,7 @@ def alertstatus(alertname):
     pairs = []
     if last_scrape:
         descs = loads(last_scrape.descs)
+        prices = loads(last_scrape.prices)
         sub_links = loads(last_scrape.links)
         root_link = alert.link.split("org")[0] + "org"
         links = []
@@ -146,6 +147,10 @@ def alertstatus(alertname):
         if len(links) > 10:
             links = links[:10]
             descs = descs[:10]
+        # append prices to description
+        for i in range(len(descs)):
+            if prices[i]:
+                descs[i] = descs[i] + " - " + prices[i]
         for i in range(len(descs)):
             pairs.append((descs[i], links[i]))
 
