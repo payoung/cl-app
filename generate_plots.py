@@ -60,6 +60,7 @@ def get_plot(alert):
             plt.plot(hrs, last_24_new_posts_by_hr, label='Last 24 Hrs')
             legen = plt.legend(loc='upper left', shadow = True)
             plt.xlim(0, 23)
+            plt.ylim(0, max(max(avg_new_posts_by_hr), max(last_24_new_posts_by_hr))*1.1)
             fig.savefig(pname)
 
             
